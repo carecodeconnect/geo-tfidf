@@ -12,6 +12,7 @@ dependencies = [
     "jupyter>=1.1.1",
     "numpy>=2.4.6",
     "pandas>=3.0.3",
+    "plotnine>=0.15.4",
     "scikit-learn>=1.8.0",
     "wordcloud>=1.9.6",
 ]
