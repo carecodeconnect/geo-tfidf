@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "datasets>=4.8.5",
+    "duckdb>=1.5.3",
     "fastapi>=0.136.3",
     "ipython>=9.13.0",
     "jupyter>=1.1.1",
