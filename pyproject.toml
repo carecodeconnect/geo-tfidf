@@ -13,6 +13,7 @@ dependencies = [
     "numpy>=2.4.6",
     "pandas>=3.0.3",
     "scikit-learn>=1.8.0",
+    "wordcloud>=1.9.6",
 ]
 
 [dependency-groups]
