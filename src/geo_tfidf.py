@@ -99,17 +99,22 @@ def top_terms_per_class(
             term       (str)      -- vocabulary term
             mean_tfidf (float64)  -- mean weight of that term within the class
     """
-    records: list[dict[str, object]] = []
-    # 1. for each class, average the rows belonging to it
-    for label, idx in labels.groupby(labels).groups.items():
-        means = np.asarray(X[idx].mean(axis=0)).ravel()
-        # 2. take the top_n columns by mean weight
-        for j in means.argsort()[::-1][:top_n]:
-            records.append({"label": label, "term": vocab[j], "mean_tfidf": means[j]})
-    # 3. tidy into a sorted long-form table
+    # 1. build a (document x term) table with the class label attached
+    tfidf = pd.DataFrame(X.toarray(), columns=vocab)
+    tfidf["label"] = labels.values
+
+    # 2. collapse to (class x term) by averaging within each class
+    means = tfidf.groupby("label").mean()
+    means.columns.name = "term"  # names the level that stack() creates
+
+    # 3. reshape to long form and take the top_n terms per class
     return (
-        pd.DataFrame.from_records(records)
+        means.stack()
+        .rename("mean_tfidf")  # Series.name sets the value column after reset_index
+        .reset_index()  # -> label, term, mean_tfidf
         .sort_values(["label", "mean_tfidf"], ascending=[True, False])
+        .groupby("label")
+        .head(top_n)
         .reset_index(drop=True)
     )
 
